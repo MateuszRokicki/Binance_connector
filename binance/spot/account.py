@@ -1,3 +1,4 @@
+from datetime import datetime
 from binance.lib.utils import check_required_parameter
 from binance.lib.utils import check_required_parameters
 
@@ -330,6 +331,15 @@ def account(self, **kwargs):
 
     url_path = "/api/v3/account"
     return self.sign_request("GET", url_path, {**kwargs})
+
+
+def current_open_orders(self, symbol='', **kwargs):
+    url_path='/api/v3/openOrders'
+    if symbol != '':
+        payload = {"symbol": symbol, "timestamp" : datetime.timestamp(datetime.now()), **kwargs}
+    else :
+        payload = {"timestamp" : datetime.timestamp(datetime.now()), **kwargs}
+    return self.sign_request("GET", url_path, payload)
 
 
 def my_trades(self, symbol: str, **kwargs):

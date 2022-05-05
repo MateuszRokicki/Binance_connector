@@ -184,6 +184,7 @@ def account_status(self, **kwargs):
     Fetch account status detail.
 
     GET /sapi/v1/account/status
+    GET /api/v3/account
 
     https://binance-docs.github.io/apidocs/spot/en/#account-status-sapi-user_data
 
@@ -191,7 +192,7 @@ def account_status(self, **kwargs):
         recvWindow (int, optional): The value cannot be greater than 60000
     """
 
-    return self.sign_request("GET", "/sapi/v1/account/status", kwargs)
+    return self.sign_request("GET", "/api/v3/account", kwargs)
 
 
 def api_trading_status(self, **kwargs):

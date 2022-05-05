@@ -5,7 +5,9 @@ from binance.lib.utils import (
     convert_list_to_json_array,
 )
 from binance.lib.utils import check_required_parameters
+from typing import Dict, Optional, List, Tuple
 
+from binance.helpers import interval_to_milliseconds, convert_ts_str
 
 def ping(self):
     """Test Connectivity
@@ -19,7 +21,6 @@ def ping(self):
 
     url_path = "/api/v3/ping"
     return self.query(url_path)
-
 
 def time(self):
     """Check Server Time
@@ -131,14 +132,10 @@ def agg_trades(self, symbol: str, **kwargs):
     params = {"symbol": symbol, **kwargs}
     return self.query("/api/v3/aggTrades", params)
 
-
 def klines(self, symbol: str, interval: str, **kwargs):
     """Kline/Candlestick Data
-
     GET /api/v3/klines
-
     https://binance-docs.github.io/apidocs/spot/en/#kline-candlestick-data
-
     Args:
         symbol (str): the trading pair
         interval (str): the interval of kline, e.g 1m, 5m, 1h, 1d, etc.
@@ -220,3 +217,29 @@ def book_ticker(self, symbol: str = None):
         "symbol": symbol,
     }
     return self.query("/api/v3/ticker/bookTicker", params)
+
+def get_all_tickers(self):
+    """Latest price for all symbols.
+
+    https://binance-docs.github.io/apidocs/spot/en/#symbol-price-ticker
+
+    :returns: List of market tickers
+
+    .. code-block:: python
+
+        [
+            {
+                "symbol": "LTCBTC",
+                "price": "4.00000200"
+            },
+            {
+                "symbol": "ETHBTC",
+                "price": "0.07946600"
+            }
+        ]
+
+    :raises: BinanceRequestException, BinanceAPIException
+
+    """
+    #return self._get('ticker/price', version=self.PRIVATE_API_VERSION)
+    return self.query('/api/v3/ticker/price')
