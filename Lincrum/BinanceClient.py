@@ -353,12 +353,12 @@ class BinanceClient():
             #pos_end = date.today().strftime('%d %b, %Y')
             pos_start = int(round(datetime.timestamp(datetime.strptime(pos_start, '%d-%m-%Y'))))
             pos_interval = timeConverter(interval=pos_interval)
-            result = self.client.klines(symbol=pos_symbol, interval=pos_interval, startTime=pos_start)
+            result = self.client.klines(symbol=pos_symbol, interval=pos_interval, startTime=pos_start, limit=1000)
             if result:
                 return result
             else:
                 result = self.client.klines(symbol=pos_symbol, interval=pos_interval, limit=1000)
-                return 1000
+                return result
         except Exception:
             pass
                 #self.events_queue.put_nowait((0, ErrorEvent({'function_name' : 'getData', 'command_name' : 'get_historical_klines', 'symbol' : pos_symbol, 'interval' : pos_interval, 'start_date' : pos_start, 'end_date' : pos_end, 'result' : result})))

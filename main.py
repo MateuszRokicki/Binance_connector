@@ -25,26 +25,27 @@ def main():
 
     symbols = pd.DataFrame(client.getAllSymbols())
     symbols = symbols[symbols[0].str.contains('USDT')]
-    print(symbols)
-    begin_date = int(round(datetime.timestamp(datetime.strptime('05/05/22 00:00:01', '%d/%m/%y %H:%M:%S'))))
+    # print(symbols)
+    begin_date = int(round(datetime.timestamp(datetime.strptime('05/05/10 00:00:01', '%d/%m/%y %H:%M:%S'))))
     now_date = int(round(datetime.timestamp(datetime.now())))
-    print(start_date, end_date)
+    print(begin_date, now_date)
 
     for symbol in symbols[0]:
         start_date = begin_date
-        end_date = start_date - 999
+        #end_date = start_date + 999
         coin_klines = []
-        for _ in np.arange(now_date, begin_date, -999):
-            klines = client.getKlinesBetweenDates(symbol, KLINE_INTERVAL_1MINUTE, start_date, end_date, limit=1000)
+        for _ in np.arange(begin_date, now_date, 999):
+            klines = client.client.klines(symbol, KLINE_INTERVAL_1MINUTE, startTime=start_date, limit=1000)
             print(symbol)
+            start_date = int(klines[-1][0] / 1000 + 1)
+            #end_date = start_date + 999
+            print(start_date)
             print('START DATE = ', str(datetime.fromtimestamp(klines[0][0] / 1000.0)))
             print('END DATE = ', str(datetime.fromtimestamp(klines[-1][0] / 1000.0)))
             coin_klines.append(klines)
-            if end_date - 1000 < begin_date:
-                end_date = begin_date
-            else:
-                start_date = end_date - 1
-                end_date = end_date - 1000
+            if start_date + 1000 > now_date:
+                klines = client.client.klines(symbol, KLINE_INTERVAL_1MINUTE, startTime=start_date, limit=1000)
+                coin_klines.append(klines)
 
         df = pd.concat(coin_klines)
         columns = ['Open time', 'Open', 'High', 'Low', 'Close', 'Volume', 'Close time', 'Quote asset volume', 'Number of trades',
@@ -52,12 +53,22 @@ def main():
         df.columns = columns
         df.reset_index(drop=True, inplace=True)
         df.drop(columns='Ignore', inplace=True)
+        print(df)
         file_name = symbol + '_' + KLINE_INTERVAL_1MINUTE + '.csv'
         df.to_csv(file_name)
-
-    df = pd.DataFrame(client.getKlinesBetweenDates('BTCUSDT', '1m', '01-01-2010', '04-05-2022', limit=1000))
-
-    print(df)
+    #res = client.getKlinesBetweenDates('BTCUSDT', '1m', 1651701602, 1651701600)
+   # res = client.client.klines('BTCUSDT', KLINE_INTERVAL_1HOUR, startTime=begin_date, limit=1000)
+    # print(res)
+    # print(len(res))
+    # begin_date = res[-1][0] + 1
+    # res2 = client.client.klines('BTCUSDT', KLINE_INTERVAL_1HOUR, startTime=begin_date, limit=1000)
+    # print(res)
+    # print(len(res))
+    # print('START DATE = ', str(datetime.fromtimestamp(res[0][0] / 1000.0)))
+    # print('START DATE = ', str(datetime.fromtimestamp(res[-1][0] / 1000.0)))
+    # print('START DATE = ', str(datetime.fromtimestamp(res2[0][0] / 1000.0)))
+    # print('START DATE = ', str(datetime.fromtimestamp(res2[-1][0] / 1000.0)))
+    # print(df)
     # client.openPosition('BTCUSDT', pos_quantity=0.001)
     # client.openBuyLimitPosition('BTCUSDT', pos_quantity=0.1, pos_price = 10000)
     # client.getRecentKline('BTCUSDT')
