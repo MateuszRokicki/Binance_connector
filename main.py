@@ -37,7 +37,7 @@ def main():
         for _ in np.arange(begin_date, now_date, 999):
             klines = client.client.klines(symbol, KLINE_INTERVAL_1MINUTE, startTime=start_date, limit=1000)
             print(symbol)
-            start_date = int(klines[-1][0] / 1000 + 1)
+            start_date = klines[-1][0] + 60000
             #end_date = start_date + 999
             print(start_date)
             print('START DATE = ', str(datetime.fromtimestamp(klines[0][0] / 1000.0)))
@@ -57,17 +57,21 @@ def main():
         file_name = symbol + '_' + KLINE_INTERVAL_1MINUTE + '.csv'
         df.to_csv(file_name)
     #res = client.getKlinesBetweenDates('BTCUSDT', '1m', 1651701602, 1651701600)
-   # res = client.client.klines('BTCUSDT', KLINE_INTERVAL_1HOUR, startTime=begin_date, limit=1000)
+    #res = client.client.klines('BTCUSDT', KLINE_INTERVAL_1MINUTE, startTime=begin_date, limit=1000)
     # print(res)
     # print(len(res))
-    # begin_date = res[-1][0] + 1
-    # res2 = client.client.klines('BTCUSDT', KLINE_INTERVAL_1HOUR, startTime=begin_date, limit=1000)
+    # begin_date2 = res[-1][0] + 60000
+    # res2 = client.client.klines('BTCUSDT', KLINE_INTERVAL_1MINUTE, startTime=begin_date2, limit=1000)
+    #res3 = client.client.klines('BTCUSDT', KLINE_INTERVAL_1MINUTE, startTime=1503002341, limit=1000)
     # print(res)
     # print(len(res))
-    # print('START DATE = ', str(datetime.fromtimestamp(res[0][0] / 1000.0)))
-    # print('START DATE = ', str(datetime.fromtimestamp(res[-1][0] / 1000.0)))
-    # print('START DATE = ', str(datetime.fromtimestamp(res2[0][0] / 1000.0)))
-    # print('START DATE = ', str(datetime.fromtimestamp(res2[-1][0] / 1000.0)))
+    # print(begin_date, begin_date2)
+    # print('START DATE = ', str(datetime.fromtimestamp(res[0][0] / 1000.0)), str(res[0][0]))
+    # print('START DATE = ', str(datetime.fromtimestamp(res[-1][0] / 1000.0)), str(res[-1][0]))
+    # print('START DATE = ', str(datetime.fromtimestamp(res2[0][0] / 1000.0)), str(res2[0][0]))
+    # print('START DATE = ', str(datetime.fromtimestamp(res2[-1][0] / 1000.0)), str(res2[-1][0]))
+    # print('START DATE = ', str(datetime.fromtimestamp(res2[0][0] / 1000.0)), str(res3[0][0]))
+    # print('START DATE = ', str(datetime.fromtimestamp(res2[-1][0] / 1000.0)), str(res3[-1][0]))
     # print(df)
     # client.openPosition('BTCUSDT', pos_quantity=0.001)
     # client.openBuyLimitPosition('BTCUSDT', pos_quantity=0.1, pos_price = 10000)
